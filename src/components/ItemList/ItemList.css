@@ -1,11 +1,12 @@
 .shopping-items-wrapper {
     min-width: 100%;
     max-width: 500px;
+    
 }
 
 .items-list {
     display: flex;
-    align-items: center;
+    align-items:center;
     margin-bottom: 2rem;
 }
 
@@ -21,6 +22,10 @@
 }
 
 .remove-item {
-    background-color: lightgray;
+    background-color: lightgrey;
     color: white;
+}
+
+.change-quantity:hover {
+    color: black;
 }
