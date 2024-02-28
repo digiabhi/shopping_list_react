@@ -1,29 +1,56 @@
 import "./InputItem.css";
-import { showSuccess } from "../../utils/showToasts.js";
+import { showError, showSuccess } from "../../utils/showToasts.js";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useContext, useEffect } from "react";
 
-function InputItem({ addItem }) {
-  const [itemName, setItemName] = useState("");
+// Context Import
+import { ShoppingDispatchContext } from "../../providers/ShoppingContext.js";
+
+function InputItem() {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+
+  const dispatch = useContext(ShoppingDispatchContext);
+
+  const handleFormSubmission = (data) => {
+    dispatch({
+      type: "add_item",
+      itemName: data.item,
+    });
+    showSuccess("Successfully added item!");
+  };
+  // useEffect(() => {
+  //   if (errors.item && errors.item.type == "required") {
+  //     showError("Item Cannot be Empty");
+  //   }
+  //   if (errors.item && errors.item.type == "minLength") {
+  //     showError("Item Cannot be less than 3 length");
+  //   }
+  // }, [errors.item && errors.item.type]);
   return (
     <div className="item-input-wrapper">
-      <input
-        className="item-input"
-        type="text"
-        placeholder="Add an item..."
-        value={itemName}
-        onChange={(e) => setItemName(e.target.value)}
-      />
-      <button
-        className="add-item-button"
-        onClick={() => {
-          addItem(itemName);
-          setItemName("");
-          showSuccess("Successfully added item!");
-        }}
-      >
-        Add
-      </button>
+      <form onSubmit={handleSubmit(handleFormSubmission)}>
+        <input
+          className="item-input"
+          type="text"
+          placeholder="Add an item..."
+          name="item"
+          {...register("item", { required: true, minLength: 3 })}
+        />
+        <button className="add-item-button">Add</button>
+      </form>
+      <div>
+        {errors.item && errors.item.type == "required" && (
+          <p>Item is missing</p>
+        )}
+        {errors.item && errors.item.type == "minLength" && (
+          <p>Item name cannot be less than 3</p>
+        )}
+      </div>
     </div>
   );
 }

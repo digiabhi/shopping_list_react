@@ -1,6 +1,13 @@
 import "./ShoppingList.css";
 import "react-toastify/dist/ReactToastify.css";
 
+// Context Import
+import {
+  ShoppingItemsContext,
+  ShoppingDispatchContext,
+} from "../../providers/ShoppingContext";
+
+//Components Import
 import Header from "../Header/Header";
 import InputItem from "../InputItem/InputItem";
 import ItemList from "../ItemList/ItemList";
@@ -13,36 +20,19 @@ import ItemReducer from "../../reducers/itemReducer";
 function ShoppingList() {
   // const [shoppingItems, setShoppingItems] = useState([]);
   const [shoppingItems, dispatch] = useReducer(ItemReducer, []);
-  function handleAddItem(name) {
-    dispatch({
-      type: "add_item",
-      itemName: name,
-    });
-  }
-  function handleAddQuantity(id) {
-    dispatch({
-      type: "increment_item",
-      itemId: id,
-    });
-  }
-  function handleDecQuantity(id) {
-    dispatch({
-      type: "decrement_item",
-      itemId: id,
-    });
-  }
+
   return (
     <>
-      <Header />
-      <ToastContainer />
-      <div className="current-shopping-list">
-        <InputItem addItem={handleAddItem} />
-        <ItemList
-          shoppingItems={shoppingItems}
-          addQuantity={handleAddQuantity}
-          decQuantity={handleDecQuantity}
-        />
-      </div>
+      <ShoppingItemsContext.Provider value={shoppingItems}>
+        <ShoppingDispatchContext.Provider value={dispatch}>
+          <Header />
+          <ToastContainer />
+          <div className="current-shopping-list">
+            <InputItem />
+            <ItemList />
+          </div>
+        </ShoppingDispatchContext.Provider>
+      </ShoppingItemsContext.Provider>
     </>
   );
 }
