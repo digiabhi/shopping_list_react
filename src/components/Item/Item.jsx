@@ -1,3 +1,4 @@
+import React from "react";
 import "./Item.css";
 
 function Item({ itemName, quantity }) {
@@ -9,4 +10,4 @@ function Item({ itemName, quantity }) {
   );
 }
 
-export default Item;
+export default React.memo(Item);
